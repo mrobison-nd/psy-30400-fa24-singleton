@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2024.2.2),
-    on August 14, 2026, at 13:55
+    on August 14, 2026, at 14:11
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -2487,7 +2487,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     
     # --- Run Routine "exitRoutine" ---
     exitRoutine.forceEnded = routineForceEnded = not continueRoutine
-    while continueRoutine:
+    while continueRoutine and routineTimer.getTime() < 3.0:
         # get current time
         t = routineTimer.getTime()
         tThisFlip = win.getFutureFlipTime(clock=routineTimer)
@@ -2514,6 +2514,20 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         if text_7.status == STARTED:
             # update params
             pass
+        
+        # if text_7 is stopping this frame...
+        if text_7.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > text_7.tStartRefresh + 3-frameTolerance:
+                # keep track of stop time/frame for later
+                text_7.tStop = t  # not accounting for scr refresh
+                text_7.tStopRefresh = tThisFlipGlobal  # on global time
+                text_7.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'text_7.stopped')
+                # update status
+                text_7.status = FINISHED
+                text_7.setAutoDraw(False)
         
         # check for quit (typically the Esc key)
         if defaultKeyboard.getKeys(keyList=["escape"]):
@@ -2554,9 +2568,14 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     exitRoutine.tStop = globalClock.getTime(format='float')
     exitRoutine.tStopRefresh = tThisFlipGlobal
     thisExp.addData('exitRoutine.stopped', exitRoutine.tStop)
+    # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
+    if exitRoutine.maxDurationReached:
+        routineTimer.addTime(-exitRoutine.maxDuration)
+    elif exitRoutine.forceEnded:
+        routineTimer.reset()
+    else:
+        routineTimer.addTime(-3.000000)
     thisExp.nextEntry()
-    # the Routine "exitRoutine" was not non-slip safe, so reset the non-slip timer
-    routineTimer.reset()
     
     # mark experiment as finished
     endExperiment(thisExp, win=win)

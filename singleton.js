@@ -1488,6 +1488,7 @@ function exitRoutineRoutineBegin(snapshot) {
     exitRoutineClock.reset(); // clock
     frameN = -1;
     continueRoutine = true; // until we're told otherwise
+    routineTimer.add(3.000000);
     exitRoutineMaxDurationReached = false;
     // update component parameters for each repeat
     psychoJS.experiment.addData('exitRoutine.started', globalClock.getTime());
@@ -1521,6 +1522,11 @@ function exitRoutineRoutineEachFrame() {
       text_7.setAutoDraw(true);
     }
     
+    frameRemains = 0.0 + 3 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
+    if (text_7.status === PsychoJS.Status.STARTED && t >= frameRemains) {
+      text_7.setAutoDraw(false);
+    }
+    
     // check for quit (typically the Esc key)
     if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
       return quitPsychoJS('The [Escape] key was pressed. Goodbye!', false);
@@ -1539,7 +1545,7 @@ function exitRoutineRoutineEachFrame() {
       }
     
     // refresh the screen if continuing
-    if (continueRoutine) {
+    if (continueRoutine && routineTimer.getTime() > 0) {
       return Scheduler.Event.FLIP_REPEAT;
     } else {
       return Scheduler.Event.NEXT;
@@ -1557,9 +1563,11 @@ function exitRoutineRoutineEnd(snapshot) {
       }
     }
     psychoJS.experiment.addData('exitRoutine.stopped', globalClock.getTime());
-    // the Routine "exitRoutine" was not non-slip safe, so reset the non-slip timer
-    routineTimer.reset();
-    
+    if (exitRoutineMaxDurationReached) {
+        routineTimer.add(exitRoutineMaxDuration);
+    } else {
+        routineTimer.add(-3.000000);
+    }
     // Routines running outside a loop should always advance the datafile row
     if (currentLoop === psychoJS.experiment) {
       psychoJS.experiment.nextEntry(snapshot);
